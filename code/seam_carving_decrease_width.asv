@@ -1,0 +1,52 @@
+clear all
+clc
+
+im=imread('Input/Diana.png');
+ground_trut = im2double(imread('Input/Diana_DMap.png'));
+
+
+h = size(im,1);
+w = size(im,2);
+
+t = (max(max(ground_trut)) - min(min(ground_trut)))*0.5;
+GG = zeros(size(im,1),size(im,2));
+for i=1:size(im,1)
+    for j=1:size(im,2)
+        if(ground_trut(i,j) > t)
+            GG(i,j) = 1;
+        end
+    end
+end
+%figure,imshow(GG,[]);title("GG treshold");
+RR = GG .* energy_img(im) / 10000;
+%RR = GG .* edge(rgb2gray(im),'canny');
+imshow(RR,[]);
+
+ground_truth =  ground_trut + RR;
+imshow(ground_truth,[]);
+%figure,imshow(ground_truth);title("old ground");
+
+if(sum(sum(GG))/(w*h) > 0.5)
+    J = imresize(im,[h 0.8*w]);
+    NG = imresize(ground_truth,[h 0.8*w]);
+    cc = size(im,2) - size(J,2);
+    left_cols = size(im,2)/2 - cc;
+    
+    nim=J;
+    nen=NG;
+    for i=1:left_cols
+        [nim,nen] = decrease_width(nim,nen);
+    end
+else
+    
+    nim=im;
+    nen=ground_truth;
+    for i=1:w/2
+        [nim,nen] = decrease_width(nim,nen);
+    end
+end
+
+
+figure;imshow(nim);title('50% width decreased');
+
+
