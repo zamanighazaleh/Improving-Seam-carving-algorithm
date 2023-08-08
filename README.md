@@ -1,4 +1,5 @@
 # Improving-Seam-carving-algorithm
+An attempt to improve seam-carving algorithm using depth-aware saliency map
 # What is seam carving?
 Seam carving is a gradient-based algorithm for content-aware image resizing. This allows image to be resized without losing meaningful content from cropping or scaling.
 # Why do we want to improve it?
